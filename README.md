@@ -6,8 +6,7 @@ In the project directory, you can run:
 
 ### `npm run server`
 
-Runs the server in the local.<br />
-Open [http://localhost:5000](http://localhost:5000) to view it in cmd-line.
+Runs the server in the local with port: [http://localhost:5000](http://localhost:5000)
 
 ### `npm run dev`
 
