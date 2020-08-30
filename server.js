@@ -1,10 +1,4 @@
 const express = require('express');
-const path = require('path');
-const crypto = require('crypto');
-const mongoose = require('mongoose');
-const multer = require('multer');
-const GridFsStorage = require('multer-gridfs-storage');
-const Grid = require('gridfs-stream');
 const methodOverride = require('method-override');
 const connectDB = require('./config/db');
 
@@ -18,11 +12,12 @@ connectDB();
 // initialize and use it like : app.use(bodyParser.json({ extended: false }));
 // but now included in express as below.
 app.use(express.json({ extended: false }));
+app.use(methodOverride('_method'));
 
 app.get('/', (req, res) => res.send('API Running'));
 
 // Define Routes of uploading an image
-//app.use('/api/upload', require('./routes/api/upload'));
+app.use('/api/upload', require('./routes/upload'));
 
 const PORT = process.env.PORT || 5000;
 
