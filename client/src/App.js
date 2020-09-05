@@ -3,10 +3,10 @@ import './App.css';
 import FileUpload from './components/FileUpload';
 
 const App = () => (
-    <div className='container mt-4'>
-      <h4 className='display-4 text-center mb-4'>
+    <div className='container'>
+      <h1 className='text-center'>
         <i className="fas fa-meteor"></i> Space App
-      </h4>
+      </h1>
       <FileUpload />
     </div>
 );

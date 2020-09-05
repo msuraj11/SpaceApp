@@ -1,75 +1,64 @@
 import React, { Fragment, useState } from 'react';
-import { omit } from 'lodash';
 import axios from 'axios';
 
 const FileUpload = () => {
     const [uploadState, setUploadState] = useState({
-        theta: '',
-        phai: '',
-        file: '',
-        fileName: 'Choose file'
+        files: '',
+        fileNames: []
     });
 
-    const {theta, phai, file, fileName} = uploadState;
+    const {files, fileNames} = uploadState;
 
     const changeHandler = e => {
-        if (e.target.name === 'file') {
-            setUploadState({...uploadState, file: e.target.files[0], fileName: e.target.files[0].name});
-        } else {
-            setUploadState({...uploadState, [e.target.name]: e.target.value});
-        }
-        
+        setUploadState({...uploadState,
+            files: [...e.target.files],
+            fileNames: [...e.target.files].map(item => item.name)});
+        console.log(files);
     };
 
     const submitHandler = async e => {
         e.preventDefault();
-        console.log(uploadState, omit(uploadState, ['file']));
         const formData = new FormData();
-        formData.append('file', file);
-        formData.append('body', {...uploadState});
+        for (const item of files) {
+            formData.append('file', item);
+        }
         try {
-            const res = axios.post('/api/upload', formData, {
+            const res = await axios.post('/api/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log(res);
+            alert(typeof res.data === 'string' ? res.data.msg : 'Uploaded succesfully');
+            setUploadState({...uploadState, files: '', fileNames: []});
         } catch (error) {
-            console.log(error);
+            if (error.response.status === 500) {
+                alert('Something went wrong');
+                setUploadState({...uploadState, files: '', fileNames: []});
+            } else {
+                alert(error.response.data.msg);
+            }
         }
     }
 
     return (
         <Fragment>
-            <form onSubmit={submitHandler}>
-                <div className="form-group">
-                    <select className="form-control" name='theta' value={theta} onChange={changeHandler}>
-                        <option value=''>--Pick Theta--</option>
-                        <option value='11'>11</option>
-                        <option value='22'>22</option>
-                        <option value='33'>33</option>
-                    </select>
-                </div>
-                <div className="form-group">
-                    <select className="form-control" name='phai' value={phai} onChange={changeHandler}>
-                        <option value=''>--Pick Phai--</option>
-                        <option value='11'>11</option>
-                        <option value='22'>22</option>
-                        <option value='33'>33</option>
-                    </select>
-                </div>
-                <div className="custom-file">
-                    <input
-                        type="file"
-                        name='file'
-                        className="custom-file-input"
-                        id="customFile"
-                        onChange={changeHandler}
-                    />
-                    <label className="custom-file-label" htmlFor="customFile">{fileName}</label>
-                </div>
-                <button type='submit'className='btn btn-primary mt-4'>Upload</button>
+            <form className='text-center my-2' onSubmit={submitHandler}>
+                <input
+                    type="file"
+                    name='file'
+                    className="custom-file-input"
+                    id="customFile"
+                    onChange={changeHandler}
+                    multiple
+                    formEncType='multipart/form-data'
+                />
+                <button type='submit'className='btn btn-primary btn-curved'>Upload</button>
             </form>
+            <ul className='text-center my-2'>
+                    {fileNames.length > 0 ? 
+                        fileNames.map((item, key) => <li key={key}>{item}</li>) : 'No file Chosen'
+                    }
+            </ul>
         </Fragment>
     );
 };

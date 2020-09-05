@@ -1,11 +1,11 @@
 const express = require('express');
 const methodOverride = require('method-override');
-const connectDB = require('./config/db');
+//const connectDB = require('./config/db');
 
 const app = express();
 
 // Connect to data-base
-connectDB();
+//connectDB();
 
 //InitMiddleware for body parser to send/post request to the route
 // Earlier to this, there used to be a package bodyParser,
