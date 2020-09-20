@@ -28,15 +28,11 @@ const FileUpload = () => {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            alert(typeof res.data === 'string' ? res.data.msg : 'Uploaded succesfully');
+            alert(res.data && (typeof res.data.msg === 'string') ? res.data.msg : 'Uploaded succesfully');
             setUploadState({...uploadState, files: '', fileNames: []});
         } catch (error) {
-            if (error.response.status === 500) {
-                alert('Something went wrong');
-                setUploadState({...uploadState, files: '', fileNames: []});
-            } else {
-                alert(error.response.data.msg);
-            }
+            setUploadState({...uploadState, files: '', fileNames: []});
+            alert((error && error.response.data.error) || 'something went wrong');
         }
     }
 
