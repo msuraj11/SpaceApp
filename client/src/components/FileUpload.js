@@ -4,10 +4,11 @@ import axios from 'axios';
 const FileUpload = () => {
     const [uploadState, setUploadState] = useState({
         files: '',
-        fileNames: []
+        fileNames: [],
+        imgDecoded: null
     });
 
-    const {files, fileNames} = uploadState;
+    const {files, fileNames, imgDecoded} = uploadState;
 
     const changeHandler = e => {
         setUploadState({...uploadState,
@@ -15,6 +16,16 @@ const FileUpload = () => {
             fileNames: [...e.target.files].map(item => item.name)});
         console.log(files);
     };
+
+    const getAllFigs = async () => {
+        try {
+            const res = await axios.get('/api/getFigs');
+            console.log(res.data);
+            setUploadState({...uploadState, imgDecoded: res.data})
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const submitHandler = async e => {
         e.preventDefault();
@@ -30,6 +41,7 @@ const FileUpload = () => {
             });
             alert(res.data && (typeof res.data.msg === 'string') ? res.data.msg : 'Uploaded succesfully');
             setUploadState({...uploadState, files: '', fileNames: []});
+            getAllFigs();
         } catch (error) {
             setUploadState({...uploadState, files: '', fileNames: []});
             alert((error && error.response.data.error) || 'something went wrong');
@@ -55,6 +67,11 @@ const FileUpload = () => {
                         fileNames.map((item, key) => <li key={key}>{item}</li>) : 'No file Chosen'
                     }
             </ul>
+            {imgDecoded ?
+                imgDecoded.map(imgDec => (
+                    <img src={`data:image/png;base64,${atob(imgDec)}`} alt="space-fig"  />
+                )) : null
+            }
         </Fragment>
     );
 };
