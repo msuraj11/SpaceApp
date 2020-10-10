@@ -69,7 +69,11 @@ const FileUpload = () => {
             </ul>
             {imgDecoded ?
                 imgDecoded.map(imgDec => (
-                    <img src={`data:image/png;base64,${Object.values(imgDec)[0]}`} alt="space-fig"  />
+                    <img
+                        src={`data:image/png;base64,${Object.values(imgDec)[0]}`}
+                        alt={`space-fig ${Object.keys(imgDec)[0]}`}
+                        className='fig'
+                    />
                 )) : null
             }
         </Fragment>

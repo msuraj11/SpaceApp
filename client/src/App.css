@@ -36,7 +36,6 @@
   
   /* Utilities */
   .container {
-    max-width: 1100px;
     margin: auto;
     overflow: hidden;
     padding: 0 2rem;
@@ -127,6 +126,11 @@
   }
   .mx {
     margin: 0 0.5rem;
+  }
+
+  .fig {
+    width: 250px;
+    height: 222px;
   }
   
   .btn {
