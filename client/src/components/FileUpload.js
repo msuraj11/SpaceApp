@@ -69,7 +69,7 @@ const FileUpload = () => {
             </ul>
             {imgDecoded ?
                 imgDecoded.map(imgDec => (
-                    <img src={`data:image/png;base64,${atob(imgDec)}`} alt="space-fig"  />
+                    <img src={`data:image/png;base64,${Object.values(imgDec)[0]}`} alt="space-fig"  />
                 )) : null
             }
         </Fragment>
