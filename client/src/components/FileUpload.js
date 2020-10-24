@@ -41,7 +41,7 @@ const FileUpload = () => {
             });
             alert(res.data && (typeof res.data.msg === 'string') ? res.data.msg : 'Uploaded succesfully');
             setUploadState({...uploadState, files: '', fileNames: []});
-            getAllFigs();
+            // getAllFigs(); 5_0.045_142.0_320.0.png
         } catch (error) {
             setUploadState({...uploadState, files: '', fileNames: []});
             alert((error && error.response.data.error) || 'something went wrong');
@@ -62,17 +62,20 @@ const FileUpload = () => {
                 />
                 <button type='submit'className='btn btn-primary btn-curved'>Upload</button>
             </form>
-            <ul className='text-center my-2'>
+            <ol className='text-center my-2'>
                     {fileNames.length > 0 ? 
                         fileNames.map((item, key) => <li key={key}>{item}</li>) : 'No file Chosen'
                     }
-            </ul>
+            </ol>
+            <button className='btn btn-primary btn-curved' onClick={getAllFigs}>Get Images</button>
+            <div>{imgDecoded ? imgDecoded.length : null}</div>
             {imgDecoded ?
                 imgDecoded.map(imgDec => (
                     <img
                         src={`data:image/png;base64,${Object.values(imgDec)[0]}`}
                         alt={`space-fig ${Object.keys(imgDec)[0]}`}
                         className='fig'
+                        key={Object.keys(imgDec)[0]}
                     />
                 )) : null
             }

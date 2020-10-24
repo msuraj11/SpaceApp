@@ -22,6 +22,7 @@ const routes = app => {
         return res.status(404).json({err: 'No files exist'});
       }
       const streamedImages = [];
+      console.log(files.length);
       files.forEach(file => {
         const readStream = gfs.openDownloadStream(file._id);
         let data = '';
@@ -37,7 +38,7 @@ const routes = app => {
       } else {
         setTimeout(() => {
           return res.send(streamedImages);
-        }, 15000);
+        }, 30000); //532 loaded for 30 sec wait
       }
     });
   });
