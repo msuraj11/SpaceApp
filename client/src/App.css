@@ -279,6 +279,19 @@
     font: inherit;
   }
 
+  #customFile {
+    display: none;
+  }
+
+  .chips {
+    margin: 0;
+    display: flex;
+    padding: 4px;
+    flex-wrap: wrap;
+    list-style: none;
+    justify-content: center;
+  }
+
   .navbar ul {
     display: flex;
   }

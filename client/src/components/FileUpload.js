@@ -1,31 +1,26 @@
 import React, { Fragment, useState } from 'react';
 import axios from 'axios';
+import IconButton from '@material-ui/core/IconButton';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
+import Button from '@material-ui/core/Button';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import WallpaperIcon from '@material-ui/icons/Wallpaper'
+import Chip from '@material-ui/core/Chip';
+import Refresh from '@material-ui/icons/Refresh';
 
-const FileUpload = () => {
-    const [uploadState, setUploadState] = useState({
-        files: '',
-        fileNames: [],
-        imgDecoded: null
-    });
-
-    const {files, fileNames, imgDecoded} = uploadState;
+const FileUpload = ({setAlert}) => {
+    const [files, setFiles] = useState('');
+    const [fileNames, setFileNames] = useState([]);
 
     const changeHandler = e => {
-        setUploadState({...uploadState,
-            files: [...e.target.files],
-            fileNames: [...e.target.files].map(item => item.name)});
-        console.log(files);
+        setFiles([...e.target.files]);
+        setFileNames([...e.target.files].map(item => item.name));
     };
 
-    const getAllFigs = async () => {
-        try {
-            const res = await axios.get('/api/getFigs');
-            console.log(res.data);
-            setUploadState({...uploadState, imgDecoded: res.data})
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    const handleRefresh = () => {
+        setFiles('');
+        setFileNames([]);
+    };
 
     const submitHandler = async e => {
         e.preventDefault();
@@ -39,14 +34,17 @@ const FileUpload = () => {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            alert(res.data && (typeof res.data.msg === 'string') ? res.data.msg : 'Uploaded succesfully');
-            setUploadState({...uploadState, files: '', fileNames: []});
-            // getAllFigs(); 5_0.045_142.0_320.0.png
+            setAlert({type: 'success',
+                msg: res.data && (typeof res.data.msg === 'string') ? res.data.msg : 'Uploaded succesfully'});
+            setFiles('');
+            setFileNames([]);
+            // getAllFigs(); 7.5_0.03_52.0_100.0.png
         } catch (error) {
-            setUploadState({...uploadState, files: '', fileNames: []});
-            alert((error && error.response.data.error) || 'something went wrong');
+            setFiles('');
+            setFileNames([]);
+            setAlert({type: 'error', msg: (error && error.response.data.error) || 'something went wrong'});
         }
-    }
+    };
 
     return (
         <Fragment>
@@ -60,25 +58,35 @@ const FileUpload = () => {
                     multiple
                     formEncType='multipart/form-data'
                 />
-                <button type='submit'className='btn btn-primary btn-curved'>Upload</button>
+                <label htmlFor="customFile" className="m">
+                    <IconButton color="primary" aria-label="upload picture" component="span">
+                        <PhotoCamera />
+                    </IconButton>
+                </label>
+                <Button
+                    variant="contained"
+                    color="default"
+                    startIcon={<CloudUploadIcon />}
+                    type="submit"
+                >
+                    Upload
+                </Button>
+                <IconButton aria-label="refresh" component="span" className="m" onClick={handleRefresh}>
+                    <Refresh />
+                </IconButton>
             </form>
-            <ol className='text-center my-2'>
-                    {fileNames.length > 0 ? 
-                        fileNames.map((item, key) => <li key={key}>{item}</li>) : 'No file Chosen'
-                    }
-            </ol>
-            <button className='btn btn-primary btn-curved' onClick={getAllFigs}>Get Images</button>
-            <div>{imgDecoded ? imgDecoded.length : null}</div>
-            {imgDecoded ?
-                imgDecoded.map(imgDec => (
-                    <img
-                        src={`data:image/png;base64,${Object.values(imgDec)[0]}`}
-                        alt={`space-fig ${Object.keys(imgDec)[0]}`}
-                        className='fig'
-                        key={Object.keys(imgDec)[0]}
-                    />
-                )) : null
-            }
+            <div className='chips'>
+                {fileNames.length > 0 ? 
+                    fileNames.map((item, key) =>
+                        <Chip
+                            key={key}
+                            variant="outlined"
+                            icon={<WallpaperIcon />}
+                            label={`${key+1}. ${item}`}
+                            className='m'
+                        />) : null
+                }
+            </div>
         </Fragment>
     );
 };

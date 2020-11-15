@@ -38,7 +38,7 @@ const routes = app => {
       } else {
         setTimeout(() => {
           return res.send(streamedImages);
-        }, 30000); //532 loaded for 30 sec wait
+        }, 30000); //678 loaded for 30 sec wait
       }
     });
   });
